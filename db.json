@@ -1,0 +1,28 @@
+{
+    "doutores": [
+        {
+            "id": 1,
+            "nome": "Dra. Alice Torres",
+            "especialidade": "Dentista",
+            "nota": 4.9,
+            "reviews": 37,
+            "imagem": "https://gravatar.com/avatar/576d359ef1d49cfbd86897803cfdf1e8?s=400&d=robohash&r=x"
+        },
+        {
+            "id": 2,
+            "nome": "Dr. James Barnett",
+            "especialidade": "Cardiologista",
+            "nota": 4.9,
+            "reviews": 37,
+            "imagem": "https://gravatar.com/avatar/6f15171f54a84abd78b070a35237e809?s=400&d=robohash&r=x"
+        }
+        ],
+        "categorias": [
+        { "id": 1, "nome": "Resort", "icone": "umbrella-beach" },
+        { "id": 2, "nome": "Dentista", "icone": "tooth" },
+        { "id": 3, "nome": "Cardiologista", "icone": "heart" },
+        { "id": 4, "nome": "Hospital", "icone": "hospital" },
+        { "id": 5, "nome": "Emergencias", "icone": "ambulance" },
+        { "id": 6, "nome": "Laboratório", "icone": "flask" }
+        ]
+}
