@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, Image } from 'react-native';
+import { View, Text, TextInput, ScrollView } from 'react-native';
 import { Avatar } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -10,7 +10,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       search: '',
-      doutores: [] // novo estado para armazenar os dados da API
+      doutores: [],
+      categorias: []
     };
   }
 
@@ -19,7 +20,7 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    fetch('http://localhost:3001/doutores') // use seu IP local se estiver no celular
+    fetch('http://localhost:3000/doutores')
       .then((response) => response.json())
       .then((data) => {
         this.setState({ doutores: data });
@@ -27,20 +28,30 @@ export default class App extends React.Component {
       .catch((error) => {
         console.error('Erro ao buscar doutores:', error);
       });
+
+    fetch('http://localhost:3000/categorias')
+      .then((response) => response.json())
+      .then((data) => {
+        this.setState({ categorias: data || [] });
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar categorias:', error);
+        this.setState({ categorias: [] });
+      });
   }
 
   render() {
-    const { search, doutores } = this.state;
+    const { search, doutores, categorias } = this.state;
 
     return (
-      <View style={{ flex: 1 }}>
+      <ScrollView style={{ flex: 1 }}>
         {/* Header */}
         <View
           style={{
             paddingTop: 40,
             paddingHorizontal: 16,
             paddingBottom: 16,
-            backgroundColor: '#1E90FF',
+            backgroundColor: '#6A0DAD',
           }}
         >
           <View
@@ -105,50 +116,36 @@ export default class App extends React.Component {
 
         <View style={{ flexDirection: 'row', marginTop: 10, paddingHorizontal: 16 }}>
           <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Categorias</Text>
-          <FontAwesome5 name="bars" size={30} color="#1E90FF" style={{ marginLeft: 'auto' }} />
+          <FontAwesome5 name="bars" size={30} color="#6A0DAD" style={{ marginLeft: 'auto' }} />
         </View>
 
-        <View style={{ alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginTop: 20, paddingHorizontal: 16 }}>
-          <View>
-            <Icon name="umbrella-beach" size={40} color="#1E90FF" />
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>Resort</Text>
-          </View>
-          <View>
-            <Icon name="tooth" size={40} color="#1E90FF" />
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>Dentista</Text>
-          </View>
-          <View>
-            <Icon name="heart" size={40} color="#1E90FF" />
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>Cardiologista</Text>
-          </View>
+        {/* Categorias dinâmicas */}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: 16, marginTop: 20 }}>
+          {categorias.map((categoria) => (
+            <View key={categoria.id} style={{ alignItems: 'center', marginRight: 20, marginBottom: 20 }}>
+              <Icon name={categoria.icone} size={40} color="#6A0DAD" />
+              <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{categoria.nome}</Text>
+            </View>
+          ))}
         </View>
 
-        <View style={{ alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginTop: 40, paddingHorizontal: 16 }}>
-          <View>
-            <Icon name="hospital" size={40} color="#1E90FF" />
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>Hospital</Text>
-          </View>
-          <View>
-            <Icon name="ambulance" size={40} color="#1E90FF" />
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>Emergencias</Text>
-          </View>
-          <View>
-            <Icon name="flask" size={40} color="#1E90FF" />
-            <Text style={{ fontWeight: "bold", fontSize: 16 }}>Laboratório</Text>
-          </View>
-        </View>
-
-        <Text style={{ fontWeight: "bold", fontSize: 16, marginTop: 60, marginLeft: 16 }}>Melhores doutores</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 16, marginTop: 40, marginLeft: 16 }}>Melhores doutores</Text>
 
         {/* Lista dinâmica de doutores */}
         <View style={{ paddingHorizontal: 16 }}>
           {doutores.map((doutor) => (
-            <View key={doutor.id} style={{ backgroundColor: '#87CEFA', flexDirection: 'row', alignItems: 'center', borderRadius: 20, marginTop: 20, padding: 10 }}>
-              <Avatar
-                rounded
-                size="medium"
-                source={{ uri: doutor.imagem }}
-              />
+            <View
+              key={doutor.id}
+              style={{
+                backgroundColor: '#D8BFD8',
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderRadius: 20,
+                marginTop: 20,
+                padding: 10,
+              }}
+            >
+              <Avatar rounded size="medium" source={{ uri: doutor.imagem }} />
               <View style={{ marginLeft: 12 }}>
                 <Text style={{ color: '#000000', fontSize: 18 }}>{doutor.nome}</Text>
                 <Text style={{ color: '#000000', fontSize: 16, fontWeight: 'bold' }}>{doutor.especialidade}</Text>
@@ -164,28 +161,28 @@ export default class App extends React.Component {
         </View>
 
         {/* Footer */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#1E90FF', paddingVertical: 10, marginTop: 50 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-around', backgroundColor: '#6A0DAD', paddingVertical: 10, marginTop: 50 }}>
           <View style={{ marginTop: 10 }}>
             <Icon name="home" size={40} color="#fff" />
-            <Text style={{ color: '#fff', fontWeight: "bold", fontSize: 16 }}>Home</Text>
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Home</Text>
           </View>
 
           <View style={{ marginTop: 10 }}>
             <Icon name="stethoscope" size={40} color="#fff" />
-            <Text style={{ color: '#fff', fontWeight: "bold", fontSize: 16 }}>Doutores</Text>
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Doutores</Text>
           </View>
 
           <View style={{ marginTop: 10 }}>
             <Icon name="calendar" size={40} color="#fff" />
-            <Text style={{ color: '#fff', fontWeight: "bold", fontSize: 16 }}>Data</Text>
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Data</Text>
           </View>
 
           <View style={{ marginTop: 10 }}>
             <Icon name="user" size={40} color="#fff" />
-            <Text style={{ color: '#fff', fontWeight: "bold", fontSize: 16 }}>Perfil</Text>
+            <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>Perfil</Text>
           </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
